@@ -1,0 +1,16 @@
+@font-face{font-family:'Manjari';font-style:normal;font-display:swap;font-weight:400;src:url(fonts/manjari-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Manjari';font-style:normal;font-display:swap;font-weight:700;src:url(fonts/manjari-latin-700-normal.woff2) format('woff2')}
+:root{--bg:#fff;--ink:#13241C;--muted:#5B6B63;--line:#DFE6E1;--green:#0F5B46;--mark:#FBEFD0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1713;--ink:#E8EEEA;--muted:#9FB0A7;--line:#25342D;--green:#3FA584;--mark:#3A2F14;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1713;--ink:#E8EEEA;--muted:#9FB0A7;--line:#25342D;--green:#3FA584;--mark:#3A2F14;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Manjari,system-ui,sans-serif;font-size:1.0625rem;line-height:1.7}
+main{max-width:760px;margin:0 auto;padding:32px 22px 64px}
+a{color:var(--green)}
+h1{font-size:2.2rem;line-height:1.2;margin:28px 0 8px}
+h2{font-size:1.25rem;margin:36px 0 6px}
+p,li{max-width:42em}
+.back{font-weight:700;text-decoration:none}
+.fill{background:var(--mark);padding:0 4px;border-radius:3px}
+.small{color:var(--muted);font-size:.92rem}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
