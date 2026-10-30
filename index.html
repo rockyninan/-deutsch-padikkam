@@ -488,6 +488,7 @@ h2.lh{font-family:"Anek Malayalam",sans-serif;font-variation-settings:"wdth" 88;
 @media (max-width:440px){.toggle button{padding:5px 8px 2px;font-size:.8rem}.brand b{font-size:.98rem;white-space:nowrap}.brand .mark{width:28px;height:28px}.menubtn{padding:6px 9px 3px;font-size:.85rem}.right{gap:6px}.bar{gap:8px}}
 .flinks{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0}.flinks a{color:var(--muted)}
 .brand{color:var(--ink)!important}nav.links a{color:var(--muted)!important}nav.links a:hover,nav.links a[aria-current="page"]{color:var(--ink)!important}.crumb a{color:var(--muted)!important}.jump a{color:var(--ink)!important}.tool,.tcard,.step,.glist a,.path li a,.lv.a2{color:var(--ink)!important}.lv.a1{color:#fff!important}
+.fbform{display:flex;flex-direction:column;gap:16px;max-width:640px}.fbform label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.95rem}.fbform textarea,.fbform input[type=text],.fbform input[type=email]{font:inherit;font-weight:400;font-size:1rem;padding:12px 14px 9px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}.fbform textarea:focus,.fbform input:focus{outline:none;border-color:var(--green)}.fbrow{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fbrow label{min-width:0}.fbform input[type=text],.fbform input[type=email],.fbform textarea{width:100%}@media (max-width:640px){.fbrow{grid-template-columns:1fr}}.fbstatus{font-weight:700}.fbstatus.ok{color:var(--ok)}.fbstatus.no{color:var(--red)}
 footer{background:var(--bg2);margin-top:24px;padding:40px 0 32px;color:var(--muted);font-size:.95rem}
 footer .row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
 footer .brand{margin-bottom:8px}
@@ -523,6 +524,7 @@ footer .brand{margin-bottom:8px}
 </style>
 </head>
 <body>
+<form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden><input type="hidden" name="form-name" value="feedback"><input name="page"><input name="bot-field"><textarea name="message"></textarea><input name="name"><input name="email"></form>
 <header class="top"><div class="wrap bar">
   <a class="brand" href="#" aria-label="Deutsch Padikkam">
     <svg class="mark" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#1B3A6B"/><path d="M7 24c3-2 6-2 9 0s6 2 9 0" stroke="#E3A21A" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M11 20V9h4.5a5.5 5.5 0 0 1 0 11z" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/></svg>
@@ -539,7 +541,7 @@ footer .brand{margin-bottom:8px}
 <main id="app"></main>
 <footer><div class="wrap row">
   <div style="max-width:36em"><p id="foot" style="margin:0"></p><p class="novoice" id="novoice"></p>
-    <p class="flinks"><a href="mailto:DEINE-EMAIL@BEISPIEL.DE?subject=Deutsch%20Padikkam%20Feedback">Feedback</a><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></p></div>
+    <p class="flinks"><a href="#feedback">Feedback</a><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></p></div>
   <p style="margin:0" class="de" lang="de">Du schaffst das!</p>
 </div></footer>
 
@@ -1745,6 +1747,43 @@ function viewMethod(){
    <div class="pager"><span></span><a class="btn" href="#a1">${u("startA1")} →</a></div></div>`;
 }
 
+
+Object.assign(UI,{
+  fbH:["Feedback / mistake report","Feedback / mistake report"],
+  fbP:["Mistake കണ്ടോ? പുതിയ topic വേണോ? ഇവിടെ എഴുതൂ. Malayalam, Manglish, English, German: എന്തും ok.","Mistake kando? Puthiya topic veno? Ivide ezhuthoo. Malayalam, Manglish, English, German: enthum ok."],
+  fbMsg:["Message","Message"], fbName:["Name (optional)","Name (optional)"], fbMail:["Email (reply വേണമെങ്കിൽ മാത്രം)","Email (reply venamenkil maathram)"],
+  fbSend:["Send","Send"], fbSending:["Sending...","Sending..."], fbOk:["Thanks! Feedback കിട്ടി. 🙏","Thanks! Feedback kitti. 🙏"],
+  fbErr:["Send ആയില്ല. കുറച്ച് കഴിഞ്ഞ് വീണ്ടും try ചെയ്യൂ.","Send aayilla. Kurach kazhinj veendum try cheyyu."],
+  fbPriv:["Send ചെയ്യുമ്പോൾ നിങ്ങളുടെ message ഈ site-ന്റെ host ആയ Netlify-യിൽ save ആകും. Details: ","Send cheyyumbol ningalude message ee site nte host aaya Netlify yil save aakum. Details: "]
+});
+let PREV = "home";
+window.addEventListener("hashchange", e => { const o = (e.oldURL.split("#")[1]||"home"); if (o!=="feedback") PREV = o; const pf = document.querySelector('#fbform input[name="page"]'); if (pf) pf.value = PREV; });
+function viewFeedback(){
+  return `<div class="wrap narrow">${crumb()}${head(ico("mail"), u("fbH"))}
+   <p class="lead">${u("fbP")}</p>
+   <form id="fbform" class="fbform" name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+     <input type="hidden" name="form-name" value="feedback">
+     <input type="hidden" name="page" value="${esc(PREV)}">
+     <p hidden><label>Bot <input name="bot-field"></label></p>
+     <label>${u("fbMsg")}<textarea name="message" rows="6" required></textarea></label>
+     <div class="fbrow"><label>${u("fbName")}<input name="name" type="text" autocomplete="name"></label>
+     <label>${u("fbMail")}<input name="email" type="email" autocomplete="email"></label></div>
+     <div class="rowbtn"><button class="btn" type="submit" id="fbsend">${u("fbSend")}</button><span id="fbstatus" class="fbstatus" aria-live="polite"></span></div>
+     <p class="small">${u("fbPriv")}<a href="datenschutz.html">Datenschutz</a></p>
+   </form><div style="height:64px"></div></div>`;
+}
+document.addEventListener("submit", async e => {
+  const f = e.target; if (f.id!=="fbform") return; e.preventDefault();
+  const st = document.getElementById("fbstatus"), btn = document.getElementById("fbsend");
+  btn.disabled = true; st.className="fbstatus"; st.textContent = u("fbSending");
+  try {
+    const r = await fetch("/", {method:"POST", headers:{"Content-Type":"application/x-www-form-urlencoded"}, body:new URLSearchParams(new FormData(f)).toString()});
+    if (!r.ok) throw new Error(r.status);
+    f.reset(); st.className="fbstatus ok"; st.textContent = u("fbOk");
+  } catch(err){ st.className="fbstatus no"; st.textContent = u("fbErr"); }
+  btn.disabled = false;
+});
+
 /* ---------- router ---------- */
 function route(){
   const h = location.hash.replace(/^#/,""); let m; CUR = null; RES = {}; FC = null; TS = null; if (TIMER) { clearInterval(TIMER); TIMER = null; }
@@ -1757,6 +1796,7 @@ function route(){
   else if (h==="daily") app.innerHTML = viewDaily();
   else if (h==="grammar") app.innerHTML = viewGrammar();
   else if (h==="method") app.innerHTML = viewMethod();
+  else if (h==="feedback") app.innerHTML = viewFeedback();
   else app.innerHTML = viewHome();
   const cur = (re) => re.test(h) ? ' aria-current="page"' : "";
   document.getElementById("nav").innerHTML =
